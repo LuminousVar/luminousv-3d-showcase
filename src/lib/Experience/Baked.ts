@@ -79,5 +79,61 @@ export default class Baked {
 
 			scene.add(roomModel1.scene);
 		}
+
+		// Room Model 2
+		const roomModel2 = resources.items._roomModel2 as GLTF;
+		if (roomModel2?.scene) {
+			roomModel2.scene.traverse((child: Object3D) => {
+				if ((child as Mesh).isMesh) {
+					(child as Mesh).material = this.model.material2;
+				}
+			});
+			scene.add(roomModel2.scene);
+		}
+
+		// Room Model 3
+		const roomModel3 = resources.items._roomModel3 as GLTF;
+		if (roomModel3?.scene) {
+			roomModel3.scene.traverse((child: Object3D) => {
+				if ((child as Mesh).isMesh) {
+					// Hide clapper board - mesh in bookshelf area
+					const worldPos = child.getWorldPosition(new Vector3());
+					if (
+						worldPos.x > 1.5 &&
+						worldPos.x < 3.5 &&
+						worldPos.y > 3.5 &&
+						worldPos.y < 5.5 &&
+						worldPos.z > -5 &&
+						worldPos.z < -3.5
+					) {
+						child.visible = false;
+					} else {
+						(child as Mesh).material = this.model.material3;
+					}
+				}
+			});
+			scene.add(roomModel3.scene);
+		}
+
+		// Social icons
+		this.addSocialIcon('linkedin');
+		this.addSocialIcon('github');
+		this.addSocialIcon('itchio');
+	}
+
+	private addSocialIcon(name: string): void {
+		const resources = this.experience.resources;
+		const model = resources.items[name] as GLTF;
+
+		if (model?.scene) {
+			model.scene.name = name;
+			model.scene.traverse((child: Object3D) => {
+				if ((child as Mesh).isMesh) {
+					(child as Mesh).material = this.model.material3;
+				}
+			});
+
+			this.experience.scene.add(model.scene);
+		}
 	}
 }
