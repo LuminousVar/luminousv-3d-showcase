@@ -2,7 +2,6 @@
     import { onMount, onDestroy } from "svelte";
     import { browser } from "$app/environment";
     import Experience from "$lib/Experience/Experience";
-	import { div } from "three/tsl";
 
     let webglContainer: HTMLDivElement | undefined = $state();
     let cssContainer: HTMLDivElement | undefined = $state();
@@ -10,6 +9,49 @@
 	let isLoading = $state(true);
 	let loadingProgress = $state(0);
 	let isMobile = $state(false);
+
+    onMount(() => {
+        if (!browser) return;
+        if (!webglContainer) return;
+
+        // Checking if user is using mobile device
+        isMobile =
+			/Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+				navigator.userAgent
+			) || window.innerWidth <= 768;
+
+        if (isMobile) {
+            isLoading = false;
+            return;
+        }
+
+        experience = new Experience({
+            webglElement: webglContainer,
+            cssElement: cssContainer
+        })
+
+        // Loading Progress
+        experience.resources.on("progress", (data) => {
+          const progress = data as { loaded: number; total: number };
+          loadingProgress = Math.round((progress.loaded / progress.total) * 100)
+        })
+
+        experience.resources.on("ready", () => {
+          setTimeout(() => {
+            isLoading = false;
+
+            if (experience) {
+                experience.navigation.activateControls();
+            }
+          }, 500)
+        })
+    });
+
+    onDestroy(() => {
+      if (experience) {
+        experience.destroy();
+      }
+    })
 
 </script>
 
