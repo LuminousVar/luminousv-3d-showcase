@@ -60,6 +60,7 @@
 		name="description"
 		content="Interactive 3D Portofolio built with Bun, SvelteKit, Three.js and GASP"
 	/>
+	<link rel="icon" type="image/svg+xml" href="/assets/svg/logo-luminousv.svg" />
 </svelte:head>
 
 {#if isMobile}
@@ -97,6 +98,11 @@
 		</svg>
 		<span>Back</span>
 	</button>
+
+	<!-- Logo -->
+	<div class="logo-container">
+		<img src="/assets/svg/logo-luminousv.svg" alt="LuminousV Logo" class="logo" />
+	</div>
 
 	<!-- Navigation banner -->
 	<nav class="banner">
@@ -372,6 +378,36 @@
 
 	.back-button:active {
 		transform: translateX(0) scale(0.98);
+	}
+
+	/* Logo Styling */
+	.logo-container {
+		position: fixed;
+		top: 2rem;
+		right: 2rem;
+		z-index: 100;
+		opacity: 0;
+		transform: translateX(20px);
+		animation: slideInFromRight 0.8s ease-out 0.5s forwards;
+	}
+
+	@keyframes slideInFromRight {
+		to {
+			opacity: 1;
+			transform: translateX(0);
+		}
+	}
+
+	.logo {
+		height: 40px;
+		width: auto;
+		filter: drop-shadow(0 4px 16px rgba(233, 69, 96, 0.3));
+		transition: all 0.3s ease;
+	}
+
+	.logo:hover {
+		filter: drop-shadow(0 6px 24px rgba(233, 69, 96, 0.5));
+		transform: scale(1.05);
 	}
 
 	.mobile-notice {

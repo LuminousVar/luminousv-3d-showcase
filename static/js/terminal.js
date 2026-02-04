@@ -271,43 +271,42 @@ Website : luminousv.my.id
     },
 
     projects: () => {
-        return `<div class="terminal-success">
-╔════════════════════════════════════════════╗
-║            Featured Projects               ║
-╚════════════════════════════════════════════╝
-</div><div class="terminal-result">
-<strong>1. 3D Portfolio Website</strong>
-   Interactive 3D portfolio built with Three.js
-   Tech: SvelteKit, Three.js, GLSL, TypeScript
-
-<strong>2. ArtiSign Real-Time Bisindo Translate</strong>
-   Real-time Bisindo Translate with 3D
-   Tech: React, FastAPI, Google Colab, TensorFlow / Keras, OpenCV
-
-<strong>3. Basic Clothes Shop </strong>
-   Web Clothes Shop and Payment Gateway
-   Tech: HTML, CSS, JS
-
-<strong>4. Management Electricity</strong>
-   A web application to help you easily manage and monitor your electricity usage.
-   Tech: SvelteKit, Elysia.js, Prisma, MySQL
-
-<strong>5. Task Management Dashboard</strong>
-   Project tracking and team collaboration
-   Tech: React, TypeScript, PostgreSQL
+    return `<div class="terminal-success">
+╔══════════════════════════════════════════════════════════════════════════╗
+║                            FEATURED PROJECTS                             ║
+╚══════════════════════════════════════════════════════════════════════════╝
 </div>
+<div class="terminal-result">
+<strong>01. 3D Portfolio Website</strong>
+    <span>Interactive 3D experience with high-fidelity rendering.</span>
+    <em>Tech: SvelteKit, Threlte (Three.js), GLSL, TypeScript</em>
 
-<strong>6. SSH Management</strong>
-   Project Management SSH / Telnet for Network
-   Tech: Python
-</div>
+<strong>02. ArtiSign: Real-Time Bisindo Translate</strong>
+    <span>Bridge communication with AI-powered sign language translation.</span>
+    <em>Tech: React, FastAPI, TensorFlow/Keras, OpenCV, MediaPipe</em>
 
-<strong>7. Cisco RESTCONF & NETCONF</strong>
-   Cisco Automation with RESTCONF & NETCONF
-   Tech: Python, FastAPI
+<strong>03. Cisco Automation (RESTCONF & NETCONF)</strong>
+    <span>Modern network programmability and automated device configuration.</span>
+    <em>Tech: Python, FastAPI, Yang Models, Cisco DevNet</em>
+
+<strong>04. Management Electricity</strong>
+    <span>Full-stack application for monitoring and managing utility usage.</span>
+    <em>Tech: SvelteKit, Elysia.js, Prisma, MySQL</em>
+
+<strong>05. SSH Management Tool</strong>
+    <span>CLI-based automation for batch SSH/Telnet network operations.</span>
+    <em>Tech: Python, Netmiko/Paramiko</em>
+
+<strong>06. Task Management Dashboard</strong>
+    <span>Collaborative project tracking and team workflow management.</span>
+    <em>Tech: React, TypeScript, PostgreSQL</em>
+
+<strong>07. Basic Clothes Shop</strong>
+    <span>E-commerce interface with integrated payment gateway.</span>
+    <em>Tech: HTML5, CSS3, JavaScript (Vanilla)</em>
 </div>`;
     }
-};
+}
 
 
 // Execute command
@@ -388,7 +387,6 @@ function initializeTerminal() {
             }
         } else if (e.key === 'Tab') {
             e.preventDefault();
-            // Basic autocomplete could be added here
         }
     });
 
@@ -400,7 +398,6 @@ function initializeTerminal() {
     &gt; Click on the command line below to start typing...
 </div>`);
 
-    // Set start time (simulate uptime)
     terminal.startTime = Date.now() - (3 * 3600000 + 42 * 60000);
 }
 

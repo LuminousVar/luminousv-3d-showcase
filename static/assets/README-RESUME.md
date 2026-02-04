@@ -1,11 +1,27 @@
-# Resume Setup
+# Resume
 
-## How to add your resume
+This resume is always updated whenever there are changes to my professional experience, skills, or certifications.
 
-Replace the `resume.pdf` file in this directory with your actual resume PDF.
+## About This Resume
 
-The Resume button in the dock will open this PDF in a new tab when clicked.
+This document contains the latest version of my professional resume, showcasing:
 
-## Alternative: Embed Resume
+- **Professional Experience**: Current and past positions
+- **Technical Skills**: Blue Team Operations, Linux SysAdmin, Network Engineering
+- **Certifications**: Industry-recognized credentials
+- **Education**: Academic background
+- **Projects**: Notable achievements and contributions
 
-If you want to embed the resume instead of opening in a new tab, you can modify the `openResume()` function in `fedora.html` to create an embedded PDF viewer window similar to the terminal or files window.
+## How to Access
+
+The resume file is available in the following formats:
+- PDF (Recommended for printing and sharing)
+- Markdown (For version control and web viewing)
+
+## Last Updated
+
+Check the file modification date for the most recent update.
+
+---
+
+For the most current version, please visit my portfolio at [luminousv.my.id](https://luminousv.my.id) or check my [LinkedIn profile](https://www.linkedin.com/in/reyhan-al-farel/).
