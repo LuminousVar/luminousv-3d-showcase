@@ -130,7 +130,7 @@ export const ORBIT_CONTROLS_CONFIG = {
 };
 
 // Social Links
-export const LINKEDIN_URL = 'https://www.linkedin.com/in/luminousv/';
-export const GITHUB_URL = 'https://github.com/luminousv';
+export const LINKEDIN_URL = 'https://www.linkedin.com/in/reyhan-al-farel/';
+export const GITHUB_URL = 'https://github.com/LuminousVar';
 export const ITCHIO_URL = 'https://luminousv.itch.io/';
-export const HUGO_DOCS_URL = 'https://docs.luminousv.dev/';
+export const HUGO_DOCS_URL = 'https://docs.luminousv.my.id/'; // COMING SOON

@@ -1,6 +1,5 @@
-// Main initialization script
-// This file loads after all other scripts and initializes the desktop
 
+// This loads after all other scripts and initializes the desktop
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize window dragging
     initializeWindowDragging();
@@ -17,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize dock indicators
     updateDockIndicators();
 
-    // Debug: Test if clicks are reaching the iframe
+    // Debug
     document.body.addEventListener('click', (e) => {
         console.log('[Fedora HTML] Body clicked at:', e.clientX, e.clientY, 'Target:', e.target);
     });

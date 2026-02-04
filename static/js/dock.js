@@ -1,8 +1,6 @@
-// Dock indicator management
-// Depends on: window-manager.js (windowStates)
+
 
 function updateDockIndicators() {
-    // Update terminal dock indicator
     const terminalDockIcon = document.querySelector('.dock-icon[onclick="openTerminal()"]');
     if (terminalDockIcon) {
         if (windowStates.terminal.open) {

@@ -16,7 +16,6 @@ function makeWindowDraggable(windowElement) {
     let animationId;
 
     header.addEventListener('mousedown', (e) => {
-        // Don't drag if clicking on buttons
         if (e.target.classList.contains('win-btn') || e.target.closest('.win-btn')) {
             return;
         }
@@ -26,7 +25,6 @@ function makeWindowDraggable(windowElement) {
         initialX = e.clientX - windowElement.offsetLeft;
         initialY = e.clientY - windowElement.offsetTop;
 
-        // Bring window to front
         document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
         windowElement.classList.add('active');
     });
@@ -36,24 +34,20 @@ function makeWindowDraggable(windowElement) {
 
         e.preventDefault();
 
-        // Cancel any pending animation frame
         if (animationId) {
             cancelAnimationFrame(animationId);
         }
 
-        // Use requestAnimationFrame for smooth updates
         animationId = requestAnimationFrame(() => {
             currentX = e.clientX - initialX;
             currentY = e.clientY - initialY;
 
-            // Boundary checking
             const maxX = window.innerWidth - windowElement.offsetWidth;
-            const maxY = window.innerHeight - windowElement.offsetHeight - 100; // Account for dock
+            const maxY = window.innerHeight - windowElement.offsetHeight - 100; 
 
             currentX = Math.max(0, Math.min(currentX, maxX));
             currentY = Math.max(0, Math.min(currentY, maxY));
 
-            // Use transform for better performance, but fallback to left/top if needed
             windowElement.style.left = currentX + 'px';
             windowElement.style.top = currentY + 'px';
         });
@@ -72,7 +66,6 @@ function makeWindowDraggable(windowElement) {
     document.addEventListener('mousemove', dragMove);
     document.addEventListener('mouseup', dragEnd);
     
-    // Handle case when mouse leaves the window while dragging
     document.addEventListener('mouseleave', dragEnd);
 }
 

@@ -197,10 +197,9 @@
 		</div>
 		<div class="docs-content">
 			<div class="docs-section hugo-redirect">
-				<h3>📚 Blog & Configuration Notes</h3>
+				<h3>My Blog & Configuration Notes</h3>
 				<p class="docs-intro">
-					Visit my Hugo-powered documentation site for detailed guides, tutorials, and configuration
-					notes.
+					Visit my documentation site for detailed guides, tutorials, and configuration notes.
 				</p>
 				<button class="hugo-button" id="hugoRedirect">
 					<span>Open Documentation</span>

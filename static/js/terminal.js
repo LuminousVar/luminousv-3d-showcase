@@ -117,7 +117,7 @@ const commands = {
         </div>
         <div class="neofetch-line">
             <span class="neofetch-label">Memory:</span>
-            <span class="neofetch-value">12288 MiB / 32768MiB</span>
+            <span class="neofetch-value">6584 MiB / 12288MiB</span>
         </div>
         <div class="color-palette">
             <div class="color-block" style="background: #e94560;"></div>
@@ -289,3 +289,109 @@ Website : luminousv.my.id
 </div>`;
     }
 };
+
+
+// Execute command
+function executeCommand(input) {
+    const trimmedInput = input.trim();
+    if (!trimmedInput) return '';
+
+    const parts = trimmedInput.split(' ');
+    const cmd = parts[0].toLowerCase();
+    const args = parts.slice(1).join(' ');
+
+    if (commands[cmd]) {
+        return commands[cmd](args);
+    } else {
+        return `<div class="terminal-error">Command not found: ${cmd}. Type 'help' for available commands.</div>`;
+    }
+}
+
+// Add output to terminal
+function addOutput(command, result) {
+    const output = document.getElementById('terminal-output');
+    if (!output) return;
+    
+    if (command) {
+        const commandLine = document.createElement('div');
+        commandLine.className = 'terminal-line';
+        commandLine.innerHTML = `
+            <div class="terminal-command-line">
+                <span class="terminal-prompt">${terminal.username}@${terminal.hostname} ${terminal.currentPath}$</span>
+                <span class="terminal-command-text">${command}</span>
+            </div>
+        `;
+        output.appendChild(commandLine);
+    }
+
+    if (result) {
+        const resultLine = document.createElement('div');
+        resultLine.className = 'terminal-line';
+        resultLine.innerHTML = result;
+        output.appendChild(resultLine);
+    }
+
+    output.scrollTop = output.scrollHeight;
+}
+
+// Initialize terminal
+function initializeTerminal() {
+    const inputElement = document.getElementById('terminal-input');
+    const promptElement = document.getElementById('input-prompt');
+
+    if (!inputElement || !promptElement) return;
+
+    inputElement.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const command = inputElement.value;
+            terminal.history.push(command);
+            terminal.historyIndex = terminal.history.length;
+
+            const result = executeCommand(command);
+            addOutput(command, result);
+            
+            inputElement.value = '';
+            promptElement.textContent = `${terminal.username}@${terminal.hostname} ${terminal.currentPath}$`;
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (terminal.historyIndex > 0) {
+                terminal.historyIndex--;
+                inputElement.value = terminal.history[terminal.historyIndex];
+            }
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (terminal.historyIndex < terminal.history.length - 1) {
+                terminal.historyIndex++;
+                inputElement.value = terminal.history[terminal.historyIndex];
+            } else {
+                terminal.historyIndex = terminal.history.length;
+                inputElement.value = '';
+            }
+        } else if (e.key === 'Tab') {
+            e.preventDefault();
+            // Basic autocomplete could be added here
+        }
+    });
+
+    // Welcome message
+    addOutput('', `<div class="terminal-success">Welcome to luminousv terminal!</div>
+<div class="terminal-info">Type 'help' to see available commands, or 'neofetch' for system info.</div>
+<div class="terminal-result">Navigate this 3D interactive portfolio with custom commands.</div>
+<div class="terminal-result" style="margin-top: 10px; opacity: 0.7; font-style: italic;">
+    &gt; Click on the command line below to start typing...
+</div>`);
+
+    // Set start time (simulate uptime)
+    terminal.startTime = Date.now() - (3 * 3600000 + 42 * 60000);
+}
+
+// Export for use in other modules
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        terminal,
+        commands,
+        executeCommand,
+        addOutput,
+        initializeTerminal
+    };
+}

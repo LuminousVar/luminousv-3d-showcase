@@ -1,6 +1,3 @@
-// Application window management functions
-// Depends on: window-manager.js (windowStates), dock.js (updateDockIndicators)
-
 // Terminal functions
 function openTerminal() {
     const win = document.getElementById('terminal-window');
@@ -204,7 +201,6 @@ function closeCredits() {
 
 // Resume function
 function openResume() {
-    // Open resume in a new tab
     window.open('/assets/resume.pdf', '_blank');
 }
 
