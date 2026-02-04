@@ -235,29 +235,38 @@ Website : luminousv.my.id
     skills: () => {
         return `<div class="terminal-info">
 ╔════════════════════════════════════════════╗
-║          Technical Skills                  ║
+║          Technical Expertise               ║
 ╚════════════════════════════════════════════╝
 </div><div class="terminal-result">
-<strong>Frontend:</strong>
-  • React, Vue, Svelte, SvelteKit
-  • Three.js, WebGL, GLSL
-  • TypeScript, JavaScript (ES6+)
-  • HTML5, CSS3, Tailwind CSS
+<strong>Blue Team Operations:</strong>
+  • Security Monitoring & Incident Response
+  • SIEM (Splunk, ELK Stack, Wazuh)
+  • Network Traffic Analysis (Wireshark, Zeek)
+  • Threat Hunting & Malware Analysis
+  • Security Hardening & Compliance (CIS, NIST)
+  • Vulnerability Assessment & Patch Management
 
-<strong>Backend:</strong>
-  • Node.js, Express
-  • Python, Django, FastAPI
-  • PostgreSQL, MongoDB
+<strong>Linux System Administration:</strong>
+  • Enterprise Linux (RHEL, Fedora, Ubuntu, Debian)
+  • System Automation & Configuration Management
+  • Shell Scripting (Bash, Python)
+  • Server Hardening & Security Auditing
+  • Performance Tuning & Monitoring
+  • Package Management & Repository Configuration
 
-<strong>Tools & DevOps:</strong>
-  • Git, GitHub Actions
-  • Docker, Kubernetes
-  • AWS, Vercel, Netlify
+<strong>Network Engineering & DevNet:</strong>
+  • Network Architecture & Design
+  • Routing & Switching (Cisco, MikroTik, Ruijie, Fortinet)
+  • Network Automation (Ansible, Python Netmiko)
+  • Software-Defined Networking (SDN)
+  • Network Security & Firewall Configuration
+  • Network Monitoring & Troubleshooting
 
-<strong>3D & Graphics:</strong>
-  • Three.js, React Three Fiber
-  • Blender, 3D Modeling
-  • GLSL Shaders, WebGL
+<strong>DevOps & Automation:</strong>
+  • Docker, Podman, Kubernetes
+  • CI/CD Pipeline (GitHub Actions, GitLab CI)
+  • Infrastructure as Code (Terraform, Ansible)
+  • Git Version Control & Collaboration
 </div>`;
     },
 
