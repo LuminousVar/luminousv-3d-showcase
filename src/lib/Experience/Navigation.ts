@@ -177,13 +177,13 @@ export default class Navigation {
 		switch (key) {
 			case 'linkedin':
 				window.open(LINKEDIN_URL, '_blank');
-				return; // Don't set isCameraMoving for external links
+				return;
 			case 'github':
 				window.open(GITHUB_URL, '_blank');
-				return; // Don't set isCameraMoving for external links
+				return;
 			case 'itchio':
 				window.open(ITCHIO_URL, '_blank');
-				return; // Don't set isCameraMoving for external links
+				return;
 			case 'arcadeMachine':
 			case 'arcadeMachineScreen':
 				audioManager?.playSingleAudio('whoosh', 0.2);
