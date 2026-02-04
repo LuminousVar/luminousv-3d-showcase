@@ -19,4 +19,15 @@ export default class Camera {
 		this.instance.rotation.copy(CAMERA_POSITION);
 		this.experience.scene.add(this.instance);
 	}
+
+	// Method resize camera
+	resize(): void {
+		this.instance.aspect = this.experience.config.width;
+		this.instance.updateProjectionMatrix();
+	}
+
+	// Method update camera
+	update(): void {
+		this.instance.updateMatrixWorld();
+	}
 }
