@@ -184,6 +184,9 @@ export default class Navigation {
 			case 'itchio':
 				window.open(ITCHIO_URL, '_blank');
 				return;
+			case 'docsToggle':
+				// Handled by handleDocsToggle, do nothing here
+				return;
 			case 'arcadeMachine':
 			case 'arcadeMachineScreen':
 				audioManager?.playSingleAudio('whoosh', 0.2);
