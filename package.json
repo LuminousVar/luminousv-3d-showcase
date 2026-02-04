@@ -1,5 +1,6 @@
 {
 	"name": "luminousv-3d-showcase",
+	"description":"Interactive 3D portofolio built with Svelte-Kit and ThreeJS",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
@@ -36,5 +37,10 @@
 		"typescript": "^5.9.3",
 		"typescript-eslint": "^8.53.1",
 		"vite": "^7.3.1"
+	},
+	"dependencies": {
+		"@types/three": "^0.182.0",
+		"gsap": "^3.14.2",
+		"three": "^0.182.0"
 	}
 }
