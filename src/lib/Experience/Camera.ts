@@ -16,7 +16,7 @@ export default class Camera {
 		);
 
 		this.instance.rotation.reorder('XYZ');
-		this.instance.rotation.copy(CAMERA_POSITION);
+		this.instance.position.copy(CAMERA_POSITION);
 		this.experience.scene.add(this.instance);
 	}
 

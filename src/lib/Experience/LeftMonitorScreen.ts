@@ -4,25 +4,25 @@ import { CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
 import type Experience from './Experience';
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {
-	RIGHT_MONITOR_SCREEN_WIDTH,
-	RIGHT_MONITOR_SCREEN_HEIGHT,
-	RIGHT_MONITOR_CSS_OBJECT_SCALE,
-	RIGHT_MONITOR_CSS_OBJECT_POSITION,
-	RIGHT_MONITOR_CSS_OBJECT_ROTATION_Y,
-	RIGHT_MONITOR_IFRAME_SRC,
+	LEFT_MONITOR_SCREEN_WIDTH,
+	LEFT_MONITOR_SCREEN_HEIGHT,
+	LEFT_MONITOR_CSS_OBJECT_SCALE,
+	LEFT_MONITOR_CSS_OBJECT_POSITION,
+	LEFT_MONITOR_IFRAME_SRC,
 	MONITOR_IFRAME_PADDING
 } from './constants';
 
-export default class rightMonitorScreen {
+export default class LeftMonitorScreen {
 	private experience: Experience;
 	private screenSize: Vector2;
 	private container: HTMLDivElement | null = null;
 	private iframe: HTMLIFrameElement | null = null;
+	private css3DObject: CSS3DObject | null = null;
 	isActive = false;
 
 	constructor(experience: Experience) {
 		this.experience = experience;
-		this.screenSize = new Vector2(RIGHT_MONITOR_SCREEN_WIDTH, RIGHT_MONITOR_SCREEN_HEIGHT);
+		this.screenSize = new Vector2(LEFT_MONITOR_SCREEN_WIDTH, LEFT_MONITOR_SCREEN_HEIGHT);
 
 		this.setModel();
 		this.setMonitorScreen();
@@ -30,25 +30,24 @@ export default class rightMonitorScreen {
 
 	private setModel(): void {
 		const resources = this.experience.resources;
-		const rightMonitor = resources.items.rightMonitor as GLTF;
+		const leftMonitor = resources.items.leftMonitor as GLTF;
 
-		if (rightMonitor?.scene) {
-			rightMonitor.scene.name = 'rightMonitor';
+		if (leftMonitor?.scene) {
+			leftMonitor.scene.name = 'leftMonitor';
 			const material = this.experience.world?.baked?.model.material2;
 
 			if (material) {
-				rightMonitor.scene.traverse((child: Object3D) => {
+				leftMonitor.scene.traverse((child: Object3D) => {
 					if ((child as MeshType).isMesh) {
 						(child as MeshType).material = material;
 					}
 				});
 			}
 
-			this.experience.scene.add(rightMonitor.scene);
+			this.experience.scene.add(leftMonitor.scene);
 		}
 	}
 
-	// Method setMonitor Screen
 	private setMonitorScreen(): void {
 		this.container = document.createElement('div');
 		this.container.style.width = this.screenSize.x + 'px';
@@ -56,7 +55,7 @@ export default class rightMonitorScreen {
 		this.container.style.pointerEvents = 'none';
 
 		this.iframe = document.createElement('iframe');
-		this.iframe.src = RIGHT_MONITOR_IFRAME_SRC;
+		this.iframe.src = LEFT_MONITOR_IFRAME_SRC;
 		this.iframe.style.width = this.screenSize.x + 'px';
 		this.iframe.style.height = this.screenSize.y + 'px';
 		this.iframe.style.padding = MONITOR_IFRAME_PADDING;
@@ -64,56 +63,76 @@ export default class rightMonitorScreen {
 		this.iframe.style.background = 'black';
 		this.iframe.style.border = 'none';
 		this.iframe.style.pointerEvents = 'none';
-		this.iframe.id = 'right-monitor-screen';
+		this.iframe.id = 'left-monitor-screen';
 
-		// Youtube iframe attributes
-		this.iframe.setAttribute(
-			'allow',
-			'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-		);
-		this.iframe.setAttribute('allowfullscreen', 'true');
 		this.container.appendChild(this.iframe);
 
-		const css3DObject = new CSS3DObject(this.container);
-		css3DObject.position.copy(RIGHT_MONITOR_CSS_OBJECT_POSITION);
-		css3DObject.scale.copy(RIGHT_MONITOR_CSS_OBJECT_SCALE);
-		css3DObject.rotation.y = RIGHT_MONITOR_CSS_OBJECT_ROTATION_Y;
+		this.css3DObject = new CSS3DObject(this.container);
+		this.css3DObject.position.copy(LEFT_MONITOR_CSS_OBJECT_POSITION);
+		this.css3DObject.scale.copy(LEFT_MONITOR_CSS_OBJECT_SCALE);
 
-		this.experience.scene.add(css3DObject);
+		// Add to main scene for proper synchronization
+		this.experience.scene.add(this.css3DObject);
 
+		// Create GL plane at exact same position - creates transparent "window"
 		const material = new MeshLambertMaterial({
 			color: 'black',
 			opacity: 0,
 			transparent: true,
 			blending: NoBlending
 		});
-
 		const geometry = new PlaneGeometry(this.screenSize.x, this.screenSize.y);
 		const screen = new Mesh(geometry, material);
 
-		screen.position.copy(css3DObject.position);
-		screen.rotation.copy(css3DObject.rotation);
-		screen.scale.copy(css3DObject.scale);
-		screen.name = 'rightMonitorScreen';
+		// Must match CSS3D object exactly
+		screen.position.copy(this.css3DObject.position);
+		screen.rotation.copy(this.css3DObject.rotation);
+		screen.scale.copy(this.css3DObject.scale);
+		screen.name = 'leftMonitorScreen';
 
+		// Add directly to scene - models are static
 		this.experience.scene.add(screen);
 	}
 
-	// Method activeControls
-	activeControls(): void {
+	activateControls(): void {
 		this.isActive = true;
+
+		if (this.css3DObject && this.css3DObject.element) {
+			this.css3DObject.element.style.pointerEvents = 'auto';
+
+			const allDivs = this.css3DObject.element.querySelectorAll('div');
+			allDivs.forEach((div: Element) => {
+				(div as HTMLElement).style.pointerEvents = 'auto';
+			});
+		}
+
 		if (this.container) {
 			this.container.style.pointerEvents = 'auto';
 		}
 
 		if (this.iframe) {
 			this.iframe.style.pointerEvents = 'auto';
+			setTimeout(() => {
+				if (this.iframe) {
+					this.iframe.focus();
+				}
+			}, 100);
 		}
 	}
 
-	// Method deactivateControls
 	deactivateControls(): void {
 		this.isActive = false;
+
+		if (this.css3DObject && this.css3DObject.element) {
+			this.css3DObject.element.style.pointerEvents = 'none';
+
+			// Reset all child divs
+			const allDivs = this.css3DObject.element.querySelectorAll('div');
+			allDivs.forEach((div: Element) => {
+				(div as HTMLElement).style.pointerEvents = 'none';
+			});
+		}
+
 		if (this.container) {
 			this.container.style.pointerEvents = 'none';
 		}

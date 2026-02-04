@@ -15,6 +15,7 @@ export default class AudioManager {
 	constructor(experience: Experience) {
 		this.experience = experience;
 		this.listener = new THREE.AudioListener();
+		this.audioLoader = new THREE.AudioLoader();
 		this.experience.camera.instance.add(this.listener);
 
 		this.loadSounds();

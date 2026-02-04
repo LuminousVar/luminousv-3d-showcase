@@ -398,7 +398,7 @@ export default class Navigation {
 			case 'rightMonitor':
 				this.orbitControls.enabled = false;
 				this.experience.renderer.enableCSSInteraction();
-				this.experience.world?.rightMonitorScreen?.activateControls();
+				this.experience.world?.rightMonitorScreen?.activeControls();
 				break;
 			default:
 				this.orbitControls.enabled = true;

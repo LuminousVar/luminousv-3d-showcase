@@ -2,7 +2,7 @@ import type Experience from './Experience';
 import Baked from './Baked';
 import Carpet from './Carpet';
 import TopChair from './TopChair';
-import CoffeeSteam from './CoffeeSteam';
+import CoffeeSteam from './CoffeSteam';
 import Confetti from './Confetti';
 import AudioManager from './AudioManager';
 import ArcadeScreen from './ArcadeScreen';
@@ -13,12 +13,20 @@ export default class World {
 	private experience: Experience;
 	baked: Baked | null = null;
 	carpet: Carpet | null = null;
+	topChair: TopChair | null = null;
+	coffeeSteam: CoffeeSteam | null = null;
+	confetti: Confetti | null = null;
+	audioManager: AudioManager | null = null;
+	arcadeScreen: ArcadeScreen | null = null;
+	leftMonitorScreen: LeftMonitorScreen | null = null;
+	rightMonitorScreen: RightMonitorScreen | null = null;
 
 	constructor(experience: Experience) {
 		this.experience = experience;
 
-		this.experience.resources.on('groupEnd', (group: { name: string }) => {
-			if (group.name === 'base') {
+		this.experience.resources.on('groupEnd', (group: unknown) => {
+			const groupData = group as { name: string };
+			if (groupData.name === 'base') {
 				this.setAudioManager();
 				this.setBaked();
 				this.setCarpet();

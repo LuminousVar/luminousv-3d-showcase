@@ -60,3 +60,77 @@ export const ARCADE_MACHINE_CAMERA_QUATERNION = new Quaternion(
 	0.6844502511134535
 );
 export const ARCADE_MACHINE_CAMERA_TARGET = new Vector3(3.25776, 2.74209, 2.3009);
+
+// Monitors (shared)
+export const MONITOR_SCREEN_WIDTH = 1370.178;
+export const MONITOR_SCREEN_HEIGHT = 764.798;
+export const MONITOR_IFRAME_PADDING = '8px';
+
+// Left Monitor
+export const LEFT_MONITOR_SCREEN_WIDTH = MONITOR_SCREEN_WIDTH;
+export const LEFT_MONITOR_SCREEN_HEIGHT = MONITOR_SCREEN_HEIGHT;
+export const LEFT_MONITOR_CSS_OBJECT_SCALE = new Vector3(0.00102, 0.00102, 1);
+export const LEFT_MONITOR_CSS_OBJECT_POSITION = new Vector3(1.06738, 2.50725, -4.23009);
+export const LEFT_MONITOR_CSS_OBJECT_ROTATION_Y = 0; // No rotation for left monitor
+export const LEFT_MONITOR_IFRAME_SRC = '/fedora.html';
+export const LEFT_MONITOR_CAMERA_POSITION = new Vector3(1.06738, 2.60725, -1.6);
+export const LEFT_MONITOR_CAMERA_QUATERNION = new Quaternion(
+	0,
+	-0.06458455890406237,
+	0,
+	0.9979122380005006
+);
+export const LEFT_MONITOR_CAMERA_TARGET = new Vector3(1.06738, 2.50725, -4.23009);
+
+// Right Monitor
+export const RIGHT_MONITOR_SCREEN_WIDTH = MONITOR_SCREEN_WIDTH;
+export const RIGHT_MONITOR_SCREEN_HEIGHT = MONITOR_SCREEN_HEIGHT;
+export const RIGHT_MONITOR_CSS_OBJECT_POSITION = new Vector3(2.47898, 2.50716, -4.14566);
+export const RIGHT_MONITOR_CSS_OBJECT_SCALE = new Vector3(0.00102, 0.00102, 1);
+export const RIGHT_MONITOR_CSS_OBJECT_ROTATION_Y = (-7.406 * Math.PI) / 180;
+export const RIGHT_MONITOR_IFRAME_SRC =
+	'https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=0&loop=1&playlist=jfKfPfyJRdk&controls=1&modestbranding=1';
+export const RIGHT_MONITOR_CAMERA_POSITION = new Vector3(2.13997, 2.60716, -1.53751);
+export const RIGHT_MONITOR_CAMERA_QUATERNION = new Quaternion(
+	-0.018960792071729096,
+	-0.06457153090946945,
+	-0.0012271102383421897,
+	0.9977321784730022
+);
+export const RIGHT_MONITOR_CAMERA_TARGET = new Vector3(2.47898, 2.50716, -4.14566);
+
+// Navigation
+export const ELEMENTS_TO_RAYCAST = [
+	'rubikGroup',
+	'linkedin',
+	'github',
+	'itchio',
+	'arcadeMachine',
+	'arcadeMachineScreen',
+	'leftMonitor',
+	'leftMonitorScreen',
+	'rightMonitor',
+	'rightMonitorScreen'
+];
+export const ORBIT_CONTROLS_CONFIG = {
+	enabled: false,
+	screenSpacePanning: true,
+	enableKeys: false,
+	zoomSpeed: 1,
+	enableDamping: true,
+	dampingFactor: 0.05,
+	rotateSpeed: 0.4,
+	maxAzimuthAngle: 0,
+	minAzimuthAngle: -Math.PI / 2.5,
+	minPolarAngle: Math.PI / 6,
+	maxPolarAngle: Math.PI / 2,
+	minDistance: 2,
+	maxDistance: 35,
+	target: { y: 2.5 }
+};
+
+// Social Links
+export const LINKEDIN_URL = 'https://www.linkedin.com/in/luminousv/';
+export const GITHUB_URL = 'https://github.com/luminousv';
+export const ITCHIO_URL = 'https://luminousv.itch.io/';
+export const HUGO_DOCS_URL = 'https://docs.luminousv.dev/';
