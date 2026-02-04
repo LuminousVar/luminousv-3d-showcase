@@ -3,7 +3,9 @@ import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 import EventEmitter from './EventEmitter';
-import { AssetGroup, type AssetItem } from '../assets';
+import type { AssetGroup, AssetItem } from '../assets';
+
+export type LoadedItem = GLTF | THREE.Texture | THREE.CubeTexture;
 
 export default class Resources extends EventEmitter {
 	items: Record<string, LoadedItem> = {};

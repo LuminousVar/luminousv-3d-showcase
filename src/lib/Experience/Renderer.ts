@@ -14,8 +14,6 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { GammaCorrectionShader } from 'three/examples/jsm/shaders/GammaCorrectionShader.js';
 import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
 import type Experience from './Experience';
-import { Linear } from 'gsap';
-import { outline } from 'three/examples/jsm/tsl/display/OutlineNode.js';
 
 export default class Renderer {
 	private experience: Experience;
@@ -104,7 +102,7 @@ export default class Renderer {
 	// Method Resize
 	resize(): void {
 		this.instance.setSize(this.experience.config.width, this.experience.config.height);
-		this.experience.setPixelRatio(this.experience.config.pixelRatio);
+		this.instance.setPixelRatio(this.experience.config.pixelRatio);
 
 		this.cssInstance.setSize(this.experience.config.width, this.experience.config.height);
 

@@ -7,7 +7,7 @@ export interface AssetItem {
 export interface AssetGroup {
 	name: string;
 	data: Record<string, unknown>;
-	intems: AssetItem[];
+	items: AssetItem[];
 }
 
 const assets: AssetGroup[] = [

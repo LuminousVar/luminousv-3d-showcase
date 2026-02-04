@@ -174,6 +174,10 @@
 			</button>
 		</div>
 	</nav>
+
+	<!-- 3D Canvas Containers - CSS3D first (behind), WebGL second (in front) -->
+	<div id="css3d" bind:this={cssContainer}></div>
+	<div id="webgl" bind:this={webglContainer}></div>
 {/if}
 
 <style>
