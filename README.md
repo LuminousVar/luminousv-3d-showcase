@@ -1,42 +1,90 @@
-# sv
+# LuminousV 3D Portfolio
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+An interactive 3D portfolio showcase built with modern web technologies. Experience an immersive environment featuring a virtual room with interactive elements, arcade games, and a simulated Fedora desktop terminal.
 
-## Creating a project
+![SvelteKit](https://img.shields.io/badge/SvelteKit-FF3E00?style=for-the-badge&logo=svelte&logoColor=white)
+![Three.js](https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=three.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)
 
-If you're seeing this, you've probably already done this step. Congrats!
+## ✨ Features
 
-```sh
-# create a new project
-npx sv create my-app
-```
+### 🏠 Interactive 3D Room
 
-To recreate this project with the same configuration:
+Navigate through a beautifully crafted virtual room with orbit controls. Click on objects to interact and explore different areas.
 
-```sh
-# recreate this project
-bun x sv create --template minimal --types ts --add prettier eslint tailwindcss="plugins:typography,forms" sveltekit-adapter="adapter:auto" --install bun luminousv-3d-showcase
-```
+### 🕹️ Arcade Machine
 
-## Developing
+Play retro-style games directly in the browser. The arcade screen features authentic CRT shader effects for that nostalgic feel.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### 🐧 Fedora Desktop Simulation
 
-```sh
-npm run dev
+A fully functional terminal simulation running on a virtual monitor. Execute commands to learn more about me and my work.
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+### 🎵 Lofi Music Player
 
-## Building
+Embedded YouTube player on the right monitor for ambient lofi beats while you explore.
 
-To create a production version of your app:
+### 🎨 Visual Effects
 
-```sh
-npm run build
-```
+- GLSL shaders for realistic coffee steam animation
+- Dynamic sky with custom shader
+- CRT screen effect on arcade machine
+- Smooth GSAP-powered camera transitions
+- Modern glassmorphism UI design
 
-You can preview the production build with `npm run preview`.
+## 🛠️ Built With
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+| Technology | Purpose                |
+| ---------- | ---------------------- |
+| SvelteKit  | Frontend framework     |
+| Three.js   | 3D graphics rendering  |
+| GSAP       | Smooth animations      |
+| TypeScript | Type-safe development  |
+| Bun        | Fast runtime & bundler |
+| Blender    | 3D asset creation      |
+| GLSL       | Custom shaders         |
+
+## 🎮 Terminal Commands
+
+The Fedora desktop terminal supports the following commands:
+
+| Command    | Description                               |
+| ---------- | ----------------------------------------- |
+| `help`     | Show all available commands               |
+| `neofetch` | Display system information with ASCII art |
+| `about`    | About this portfolio project              |
+| `skills`   | My technical expertise                    |
+| `projects` | Featured projects showcase                |
+| `contact`  | Contact information                       |
+| `whoami`   | Print current username                    |
+| `pwd`      | Print working directory                   |
+| `ls`       | List directory contents                   |
+| `cd`       | Change directory                          |
+| `date`     | Show current date and time                |
+| `uptime`   | Show system uptime                        |
+| `clear`    | Clear terminal screen                     |
+
+## 🗺️ Navigation
+
+| Area               | Description                              |
+| ------------------ | ---------------------------------------- |
+| **Left Monitor**   | Fedora desktop with interactive terminal |
+| **Right Monitor**  | Lofi music YouTube player                |
+| **Arcade Machine** | Playable retro games                     |
+| **Docs Button**    | Opens documentation site                 |
+
+## 👤 Author
+
+**LuminousV (Reyhan Al Farel)**
+
+- 🌐 Website: [luminousv.my.id](https://luminousv.my.id)
+- 💻 GitHub: [@LuminousVar](https://github.com/LuminousVar)
+- 💼 LinkedIn: [Reyhan Al Farel](https://www.linkedin.com/in/reyhan-al-farel/)
+- 📧 Email: farelreyhan6@gmail.com
+
+---
+
+<p align="center">
+  Made with ❤️ and ☕ by LuminousV | Reyhan Al Farel
+</p>
