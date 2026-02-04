@@ -32,3 +32,31 @@ export const TOP_CHAIR_POSITION = new Vector3(1.4027, 0.496728, -1.21048);
 
 // Confetti
 export const CONFETTI_AMOUNT = 600;
+
+// Arcade Machine
+export const ARCADE_SCREEN_WIDTH = 1006.986;
+export const ARCADE_SCREEN_HEIGHT = 1210.1182617331252;
+export const ARCADE_CSS_OBJECT_SCALE = new Vector3(0.00102, 0.00102, 0.00102);
+export const ARCADE_CSS_OBJECT_POSITION = new Vector3(3.24776, 2.7421, 2.3009);
+export const ARCADE_CSS_OBJECT_ROTATION_X = -Math.PI / 7;
+export const ARCADE_CSS_OBJECT_ROTATION_Y = -Math.PI / 2;
+export const CRT_UNIFORMS = {
+	uCurvature: new Vector2(3, 3),
+	uScreenResolution: new Vector2(ARCADE_SCREEN_WIDTH / 5, ARCADE_SCREEN_HEIGHT / 5),
+	uScanLineOpacity: new Vector2(0.5, 0.5),
+	uBaseColor: new Color(0.1, 0.1, 0.1).convertSRGBToLinear(),
+	uColor: new Color(0.0, 0.0, 0.0).convertSRGBToLinear(),
+	uVignetteOpacity: 1,
+	uBrightness: 2.5,
+	uVignetteRoundness: 1
+};
+export const ARCADE_IFRAME_SRC = 'https://joan-arcade-machine.vercel.app';
+export const ARCADE_IFRAME_PADDING = '16px';
+export const ARCADE_MACHINE_CAMERA_POSITION = new Vector3(-1.7, 5.5, 2.3009);
+export const ARCADE_MACHINE_CAMERA_QUATERNION = new Quaternion(
+	-0.17756084520729903,
+	-0.6844502511134536,
+	-0.17756084520729903,
+	0.6844502511134535
+);
+export const ARCADE_MACHINE_CAMERA_TARGET = new Vector3(3.25776, 2.74209, 2.3009);
