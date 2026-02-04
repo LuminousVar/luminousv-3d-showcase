@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fedora Desktop</title>
+    <link rel="stylesheet" href="fedora.css">
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Ensure all interactive elements are clickable */
+        button, input, .dock-icon, .win-btn, .terminal-input {
+            pointer-events: auto !important;
+            cursor: pointer;
+        }
+
+        input {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Cantarell', 'Segoe UI', sans-serif;
+            pointer-events: auto;
+        }
+
+        .fedora-desktop {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3a5f 0%, #0d2137 50%, #051829 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            pointer-events: auto;
+        }
+
+        .fedora-desktop::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(79, 172, 254, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 242, 254, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(79, 172, 254, 0.05) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        /* Top Panel */
+        .top-panel {
+            height: 32px;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            pointer-events: auto;
+        }
+
+        .top-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .activities-btn {
+            cursor: pointer;
+            padding: 4px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            pointer-events: auto;
+        }
+        .activities-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .app-menu {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            pointer-events: auto;
+        }
+        .app-menu:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .top-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 11px;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+        }
+
+        .system-indicator {
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            pointer-events: auto;
+        }
+        .system-indicator:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Desktop */
+        .desktop-area {
+            flex: 1;
+            position: relative;
+            pointer-events: auto;
+        }
+
+        /* Window */
+        .window {
+            position: absolute;
+            background: rgba(40, 40, 40, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+            pointer-events: auto;
+            transition: box-shadow 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        .window.active {
+            z-index: 10;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.7);
+            display: block;
+            pointer-events: auto;
+        }
+        .window.minimized {
+            display: none;
+        }
+        .window.dragging {
+            transition: none;
+            user-select: none;
+            cursor: move;
+        }
+
+        #terminal-window {
+            top: 40px;
+            left: 50px;
+            width: calc(100% - 100px);
+            height: calc(100% - 150px);
+        }
+
+        #files-window {
+            top: 60px;
+            left: 70px;
+            width: 600px;
+            height: 450px;
+        }
+
+        #settings-window {
+            top: 50px;
+            left: 100px;
+            width: 750px;
+            height: 520px;
+        }
+
+        #settings-window {
+            top: 50px;
+            left: 100px;
+            width: 750px;
+            height: 520px;
+        }
+
+        #settings-window {
+            top: 50px;
+            left: 100px;
+            width: 750px;
+            height: 520px;
+        }
+
+        #vscode-window {
+            top: 30px;
+            left: 80px;
+            width: 850px;
+            height: 550px;
+        }
+
+        #github-window {
+            top: 40px;
+            left: 110px;
+            width: 700px;
+            height: 500px;
+        }
+
+        #credits-window {
+            top: 50px;
+            left: 100px;
+            width: 750px;
+            height: 550px;
+        }
+
+        .window-header {
+            height: 46px;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: move;
+        }
+
+        .window-title {
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .win-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+            transition: all 0.15s ease;
+            background: rgba(255, 255, 255, 0.1);
+            pointer-events: auto;
+        }
+        .win-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .win-btn.close:hover { 
+            background: #e94560; 
+            color: white;
+        }
+
+        .window-content {
+            height: calc(100% - 46px);
+            overflow: hidden;
+            background: #1e1e1e;
+        }
+
+        /* Interactive Terminal */
+        .terminal-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: #0d0d0d;
+        }
+
+        .terminal-output {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #d4d4d4;
+        }
+
+        .terminal-output::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .terminal-output::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        .terminal-output::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+
+        .terminal-output::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+
+        .terminal-output * {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+
+        .terminal-line {
+            margin-bottom: 8px;
+        }
+
+        .terminal-command-line {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+
+        .terminal-prompt {
+            color: #5eeb5b;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .terminal-command-text {
+            color: #fff;
+        }
+
+        .terminal-result {
+            margin-left: 0;
+            margin-top: 4px;
+            white-space: pre-wrap;
+            color: #ccc;
+        }
+
+        .terminal-error {
+            color: #ff6b6b;
+        }
+
+        .terminal-success {
+            color: #5eeb5b;
+        }
+
+        .terminal-info {
+            color: #3584e4;
+        }
+
+        .terminal-warning {
+            color: #ffd93d;
+        }
+
+        .terminal-input-area {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #0a0a0a;
+            border-top: 1px solid #2a2a2a;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 12px;
+        }
+
+        .terminal-input-prompt {
+            color: #5eeb5b;
+            font-weight: 600;
+            margin-right: 8px;
+            white-space: nowrap;
+        }
+
+        .terminal-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-family: inherit;
+            font-size: inherit;
+            padding: 4px;
+            pointer-events: auto;
+            cursor: text;
+        }
+
+        /* Neofetch Display */
+        .neofetch-display {
+            display: flex;
+            gap: 24px;
+            margin: 16px 0;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border-left: 3px solid #3584e4;
+        }
+
+        .neofetch-ascii {
+            color: #3584e4;
+            font-size: 9px;
+            line-height: 1.1;
+            white-space: pre;
+            font-weight: 600;
+        }
+
+        .neofetch-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .neofetch-line {
+            display: flex;
+            gap: 8px;
+        }
+
+        .neofetch-label {
+            color: #3584e4;
+            font-weight: 600;
+            min-width: 90px;
+        }
+
+        .neofetch-value {
+            color: #d4d4d4;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .color-block {
+            width: 28px;
+            height: 14px;
+            border-radius: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Files Window */
+        .files-window {
+            display: flex;
+            height: 100%;
+        }
+
+        .files-sidebar {
+            width: 180px;
+            background: #2d2d2d;
+            padding: 12px 0;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-section {
+            font-size: 10px;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            padding: 8px 16px;
+            margin-top: 8px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.15s ease;
+            pointer-events: auto;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-item.active {
+            background: rgba(53, 132, 228, 0.3);
+            border-left: 3px solid #3584e4;
+        }
+
+        .files-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #1e1e1e;
+        }
+
+        .files-toolbar {
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .files-path {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .files-grid {
+            flex: 1;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 16px;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            pointer-events: auto;
+        }
+
+        .file-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .file-item-icon {
+            font-size: 32px;
+        }
+
+        .file-item-name {
+            font-size: 11px;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        /* Dock */
+        .dock {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            background: rgba(30, 30, 30, 0.85);
+            padding: 8px 14px;
+            border-radius: 16px;
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 50;
+            pointer-events: auto;
+        }
+
+        .dock-icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            pointer-events: auto;
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        .dock-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.15) translateY(-8px);
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        .dock-icon.has-window::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+        }
+
+        .dock-icon svg {
+            width: 32px;
+            height: 32px;
+            fill: currentColor;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        .dock-separator {
+            width: 1px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 4px 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="fedora-desktop">
+        <!-- Top Panel -->
+        <div class="top-panel">
+            <div class="top-left">
+                <div class="activities-btn">Activities</div>
+                <div class="app-menu" id="terminal-menu" onclick="toggleTerminal()">
+                    <span class="app-menu-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10zm-2-9H6v2h12v-2z"/>
+                            <path d="M7 14l5 3V11z"/>
+                        </svg>
+                    </span>
+                    <span>Terminal</span>
+                </div>
+            </div>
+            <div class="top-center">
+                <div id="time">12:00</div>
+                <div id="date">Mon Feb 2</div>
+            </div>
+            <div class="top-right">
+                <div class="system-indicator">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                    </svg>
+                </div>
+                <div class="system-indicator">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 21l-3.5-3.5c-2.5-2.5-2.5-6.5 0-9 2.5-2.5 6.5-2.5 9 0 2.5 2.5 2.5 6.5 0 9L12 21z"/>
+                    </svg>
+                </div>
+                <div class="system-indicator">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4zM11 20v-5.5H9L13 7v5.5h2L11 20z"/>
+                    </svg>
+                </div>
+                <div class="system-indicator">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desktop Area -->
+        <div class="desktop-area">
+            <!-- Terminal Window -->
+            <div class="window" id="terminal-window">
+                <div class="window-header">
+                    <span class="window-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;">
+                            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10zm-2-9H6v2h12v-2z"/>
+                            <path d="M7 14l5 3V11z"/>
+                        </svg>
+                        Terminal - Portfolio Desktop
+                    </span>
+                    <div class="window-controls">
+                        <button class="win-btn" onclick="minimizeTerminal()">−</button>
+                        <button class="win-btn">□</button>
+                        <button class="win-btn close" onclick="closeTerminal()">×</button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="terminal-wrapper">
+                        <div class="terminal-output" id="terminal-output"></div>
+                        <div class="terminal-input-area">
+                            <span class="terminal-input-prompt" id="input-prompt">luminousv@fedora ~$</span>
+                            <input 
+                                type="text" 
+                                class="terminal-input" 
+                                id="terminal-input"
+                                autocomplete="off"
+                                spellcheck="false"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Files Window -->
+            <div class="window" id="files-window">
+                <div class="window-header">
+                    <span class="window-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;">
+                            <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                        </svg>
+                        Home
+                    </span>
+                    <div class="window-controls">
+                        <button class="win-btn" onclick="minimizeFiles()">−</button>
+                        <button class="win-btn">□</button>
+                        <button class="win-btn close" onclick="closeFiles()">×</button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="files-window">
+                        <div class="files-sidebar">
+                            <div class="sidebar-section">Places</div>
+                            <div class="sidebar-item active">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                                </svg>
+                                <span>Home</span>
+                            </div>
+                            <div class="sidebar-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                                </svg>
+                                <span>Documents</span>
+                            </div>
+                            <div class="sidebar-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                                </svg>
+                                <span>Downloads</span>
+                            </div>
+                            <div class="sidebar-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/>
+                                </svg>
+                                <span>Music</span>
+                            </div>
+                            <div class="sidebar-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                                </svg>
+                                <span>Pictures</span>
+                            </div>
+                            <div class="sidebar-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M18 3v2h-2V3H8v2H6V3H4v18h2v-2h2v2h8v-2h2v2h2V3h-2zM8 17H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2zm10 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z"/>
+                                </svg>
+                                <span>Videos</span>
+                            </div>
+                            <div class="sidebar-section">Devices</div>
+                            <div class="sidebar-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-5 14H9v-2h6v2zm3-4H6v-2h12v2zm0-4H6V6h12v2z"/>
+                                </svg>
+                                <span>500GB SSD</span>
+                            </div>
+                        </div>
+                        <div class="files-main">
+                            <div class="files-toolbar">
+                                <div class="files-path">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                                    </svg>
+                                    <span>/home/user</span>
+                                </div>
+                            </div>
+                            <div class="files-grid">
+                                <div class="file-item">
+                                    <svg class="file-item-icon" width="48" height="48" viewBox="0 0 24 24" fill="#62a0ea">
+                                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    </svg>
+                                    <span class="file-item-name">Documents</span>
+                                </div>
+                                <div class="file-item">
+                                    <svg class="file-item-icon" width="48" height="48" viewBox="0 0 24 24" fill="#62a0ea">
+                                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    </svg>
+                                    <span class="file-item-name">Downloads</span>
+                                </div>
+                                <div class="file-item">
+                                    <svg class="file-item-icon" width="48" height="48" viewBox="0 0 24 24" fill="#62a0ea">
+                                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    </svg>
+                                    <span class="file-item-name">Music</span>
+                                </div>
+                                <div class="file-item">
+                                    <svg class="file-item-icon" width="48" height="48" viewBox="0 0 24 24" fill="#62a0ea">
+                                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    </svg>
+                                    <span class="file-item-name">Pictures</span>
+                                </div>
+                                <div class="file-item">
+                                    <svg class="file-item-icon" width="48" height="48" viewBox="0 0 24 24" fill="#62a0ea">
+                                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    </svg>
+                                    <span class="file-item-name">Projects</span>
+                                </div>
+                                <div class="file-item">
+                                    <svg class="file-item-icon" width="48" height="48" viewBox="0 0 24 24" fill="#62a0ea">
+                                        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    </svg>
+                                    <span class="file-item-name">Videos</span>
+                                </div>
+                                <div class="file-item">
+                                    <svg class="file-item-icon" width="48" height="48" viewBox="0 0 24 24" fill="#deddda">
+                                        <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                                    </svg>
+                                    <span class="file-item-name">README.md</span>
+                                </div>
+                                <div class="file-item">
+                                    <svg class="file-item-icon" width="48" height="48" viewBox="0 0 24 24" fill="#9a9996">
+                                        <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                                    </svg>
+                                    <span class="file-item-name">.bashrc</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Window -->
+            <div class="window" id="settings-window">
+                <div class="window-header">
+                    <span class="window-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;">
+                            <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                        </svg>
+                        Settings
+                    </span>
+                    <div class="window-controls">
+                        <button class="win-btn" onclick="minimizeSettings()">−</button>
+                        <button class="win-btn">□</button>
+                        <button class="win-btn close" onclick="closeSettings()">×</button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="files-window">
+                        <div class="files-sidebar">
+                            <div class="sidebar-item active" onclick="changeSettingsPanel('wifi')">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 21l-3.5-3.5c-2.5-2.5-2.5-6.5 0-9 2.5-2.5 6.5-2.5 9 0 2.5 2.5 2.5 6.5 0 9L12 21zm0-15c-1.3 0-2.7.5-3.7 1.5-2 2-2 5.2 0 7.2l3.7 3.7 3.7-3.7c2-2 2-5.2 0-7.2C14.7 6.5 13.3 6 12 6zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+                                </svg>
+                                <span>Wi-Fi</span>
+                            </div>
+                            <div class="sidebar-item" onclick="changeSettingsPanel('appearance')">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+                                </svg>
+                                <span>Appearance</span>
+                            </div>
+                            <div class="sidebar-item" onclick="changeSettingsPanel('notifications')">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
+                                </svg>
+                                <span>Notifications</span>
+                            </div>
+                            <div class="sidebar-item" onclick="changeSettingsPanel('sound')">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                                </svg>
+                                <span>Sound</span>
+                            </div>
+                            <div class="sidebar-item" onclick="changeSettingsPanel('power')">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4zM11 20v-5.5H9L13 7v5.5h2L11 20z"/>
+                                </svg>
+                                <span>Power</span>
+                            </div>
+                            <div class="sidebar-item" onclick="changeSettingsPanel('displays')">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/>
+                                </svg>
+                                <span>Displays</span>
+                            </div>
+                            <div class="sidebar-item" onclick="changeSettingsPanel('privacy')">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
+                                </svg>
+                                <span>Privacy</span>
+                            </div>
+                            <div class="sidebar-item" onclick="changeSettingsPanel('users')">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                                </svg>
+                                <span>Users</span>
+                            </div>
+                            <div class="sidebar-item" onclick="changeSettingsPanel('keyboard')">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/>
+                                </svg>
+                                <span>Keyboard</span>
+                            </div>
+                            <div class="sidebar-item" onclick="changeSettingsPanel('about')">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                                </svg>
+                                <span>About</span>
+                            </div>
+                        </div>
+                        <div class="files-main" style="padding: 24px;">
+                            <div id="settings-content">
+                                <h3 style="margin: 0 0 20px 0; font-size: 24px; font-weight: 600;">Wi-Fi</h3>
+                                <div style="display: flex; flex-direction: column; gap: 16px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="opacity: 0.9;">
+                                                <path d="M12 21l-3.5-3.5c-2.5-2.5-2.5-6.5 0-9 2.5-2.5 6.5-2.5 9 0 2.5 2.5 2.5 6.5 0 9L12 21z"/>
+                                            </svg>
+                                            <div>
+                                                <div style="font-weight: 600; margin-bottom: 4px;">Home Network</div>
+                                                <div style="font-size: 12px; opacity: 0.7;">Connected</div>
+                                            </div>
+                                        </div>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#3584e4">
+                                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                        </svg>
+                                    </div>
+                                    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 8px; display: flex; align-items: center; gap: 12px;">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="opacity: 0.6;">
+                                            <path d="M12 21l-3.5-3.5c-2.5-2.5-2.5-6.5 0-9 2.5-2.5 6.5-2.5 9 0 2.5 2.5 2.5 6.5 0 9L12 21z"/>
+                                        </svg>
+                                        <div>
+                                            <div style="font-weight: 600; margin-bottom: 4px;">Office WiFi</div>
+                                            <div style="font-size: 12px; opacity: 0.7;">Available</div>
+                                        </div>
+                                    </div>
+                                    <div style="padding: 16px; background: rgba(255,255,255,0.03); border-radius: 8px; display: flex; align-items: center; gap: 12px;">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="opacity: 0.4;">
+                                            <path d="M12 21l-3.5-3.5c-2.5-2.5-2.5-6.5 0-9 2.5-2.5 6.5-2.5 9 0 2.5 2.5 2.5 6.5 0 9L12 21z"/>
+                                        </svg>
+                                        <div>
+                                            <div style="font-weight: 600; margin-bottom: 4px;">Guest Network</div>
+                                            <div style="font-size: 12px; opacity: 0.7;">Available</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VSCode Window -->
+            <div class="window" id="vscode-window">
+                <div class="window-header" style="background: #323233;">
+                    <span class="window-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right: 8px;">
+                            <path d="M17.583 2L6.25 11.737l-3.75-2.925L1 9.676v4.648l1.5.864 3.75-2.925L17.583 22 23 19.257V4.743L17.583 2z" fill="#007ACC"/>
+                            <path d="M17.583 2L6.25 11.737l-3.75-2.925L1 9.676v4.648l1.5.864 3.75-2.925L17.583 22v-20z" fill="#1F9CF0"/>
+                        </svg>
+                        Visual Studio Code
+                    </span>
+                    <div class="window-controls">
+                        <button class="win-btn" onclick="minimizeVSCode()">−</button>
+                        <button class="win-btn">□</button>
+                        <button class="win-btn close" onclick="closeVSCode()">×</button>
+                    </div>
+                </div>
+                <div class="window-content" style="padding: 0; display: flex; flex-direction: column;">
+                    <!-- VSCode Menu Bar -->
+                    <div style="background: #3c3c3c; padding: 4px 12px; font-size: 13px; display: flex; gap: 16px; border-bottom: 1px solid #252526;">
+                        <span style="opacity: 0.8;">File</span>
+                        <span style="opacity: 0.8;">Edit</span>
+                        <span style="opacity: 0.8;">Selection</span>
+                        <span style="opacity: 0.8;">View</span>
+                        <span style="opacity: 0.8;">Go</span>
+                        <span style="opacity: 0.8;">Run</span>
+                        <span style="opacity: 0.8;">Terminal</span>
+                        <span style="opacity: 0.8;">Help</span>
+                    </div>
+                    <!-- VSCode Main Area -->
+                    <div style="display: flex; flex: 1; overflow: hidden;">
+                        <!-- Activity Bar -->
+                        <div style="width: 48px; background: #333333; display: flex; flex-direction: column; align-items: center; padding: 8px 0; gap: 16px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff" opacity="0.8">
+                                <path d="M17.5 0h-9L7 1.5V6H2.5L1 7.5v15.07L2.5 24h12.07L16 22.57V18h4.7l1.3-1.43V4.5L17.5 0zm0 2.12l2.38 2.38H17.5V2.12zm-3 20.38H3V8h4v8.07L8.5 17H14v5.5zm6-6H8v-8h5.5V3H8V2h6l1.5 1.5v4.57L14 9.43v.57h6.5V16.5z"/>
+                            </svg>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff" opacity="0.5">
+                                <path d="M15.25 0a8.25 8.25 0 0 0-6.18 13.72L1 22.88l1.12 1.12 8.05-9.12A8.251 8.251 0 1 0 15.25 0zm0 15a6.75 6.75 0 1 1 0-13.5 6.75 6.75 0 0 1 0 13.5z"/>
+                            </svg>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff" opacity="0.5">
+                                <path d="M21.007 8.222A3.738 3.738 0 0 0 15.045 5.2a3.737 3.737 0 0 0 1.156 6.583 2.988 2.988 0 0 1-2.668 1.67h-2.99a4.456 4.456 0 0 0-2.989 1.165V7.474a3.737 3.737 0 1 0-1.494 0v9.053a3.737 3.737 0 1 0 1.654.166 2.99 2.99 0 0 1 2.829-2.09h2.99a4.484 4.484 0 0 0 4.223-3.078 3.738 3.738 0 0 0 3.25-3.303zM3.556 3.737a2.244 2.244 0 1 1 4.488 0 2.244 2.244 0 0 1-4.488 0zm4.488 16.526a2.244 2.244 0 1 1-4.488 0 2.244 2.244 0 0 1 4.488 0zm9.71-8.74a2.244 2.244 0 1 1 0-4.488 2.244 2.244 0 0 1 0 4.489z"/>
+                            </svg>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff" opacity="0.5">
+                                <path d="M10.94 13.5l-1.32 1.32a3.73 3.73 0 0 0-7.24 0L1.06 13.5 0 14.56l1.72 1.72-.22.22V18H0v1.5h1.5v.08c.077.489.214.966.41 1.42L.47 22.44 1.53 23.5l1.28-1.28a3.73 3.73 0 0 0 4.44 0l1.28 1.28 1.06-1.06-1.42-1.44c.196-.454.333-.931.41-1.42v-.08H10.5V18H9v-1.5l-.22-.22L10.5 14.56l-1.06-1.06zM7.5 19.5a2.25 2.25 0 0 1-4.5 0v-1.5a2.25 2.25 0 0 1 4.5 0v1.5zM22.5 6h-6a2.252 2.252 0 0 0-2.25 2.25v9c0 .414.336.75.75.75h1.5v4.5l3-3h3a2.252 2.252 0 0 0 2.25-2.25v-9A2.252 2.252 0 0 0 22.5 6zm.75 11.25a.75.75 0 0 1-.75.75h-3.75L17.25 19.5V18H15V8.25A.75.75 0 0 1 15.75 7.5h6.75a.75.75 0 0 1 .75.75v9z"/>
+                            </svg>
+                        </div>
+                        <!-- File Explorer -->
+                        <div style="width: 200px; background: #252526; border-right: 1px solid #1e1e1e; padding: 8px 0; font-size: 13px;">
+                            <div style="padding: 4px 12px; text-transform: uppercase; font-size: 11px; opacity: 0.6; letter-spacing: 0.5px;">Explorer</div>
+                            <div style="padding: 4px 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; margin-top: 8px;">
+                                <span style="font-size: 10px;">▼</span> SVELTE-APP
+                            </div>
+                            <div style="padding: 2px 12px 2px 28px; opacity: 0.8; display: flex; align-items: center; gap: 6px;">
+                                <span style="color: #c09553;">📁</span> src
+                            </div>
+                            <div style="padding: 2px 12px 2px 44px; opacity: 0.8; display: flex; align-items: center; gap: 6px;">
+                                <span style="color: #c09553;">📁</span> lib
+                            </div>
+                            <div style="padding: 2px 12px 2px 44px; opacity: 0.8; display: flex; align-items: center; gap: 6px;">
+                                <span style="color: #c09553;">📁</span> routes
+                            </div>
+                            <div style="padding: 2px 12px 2px 60px; opacity: 0.9; display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.1);">
+                                <span style="color: #ff3e00;">◆</span> +page.svelte
+                            </div>
+                            <div style="padding: 2px 12px 2px 60px; opacity: 0.8; display: flex; align-items: center; gap: 6px;">
+                                <span style="color: #ff3e00;">◆</span> +layout.svelte
+                            </div>
+                            <div style="padding: 2px 12px 2px 28px; opacity: 0.8; display: flex; align-items: center; gap: 6px;">
+                                <span style="color: #ff3e00;">◆</span> app.html
+                            </div>
+                            <div style="padding: 2px 12px 2px 28px; opacity: 0.8; display: flex; align-items: center; gap: 6px;">
+                                <span style="color: #6997d5;">{ }</span> package.json
+                            </div>
+                            <div style="padding: 2px 12px 2px 28px; opacity: 0.8; display: flex; align-items: center; gap: 6px;">
+                                <span style="color: #519aba;">TS</span> svelte.config.js
+                            </div>
+                            <div style="padding: 2px 12px 2px 28px; opacity: 0.8; display: flex; align-items: center; gap: 6px;">
+                                <span style="color: #519aba;">TS</span> vite.config.ts
+                            </div>
+                        </div>
+                        <!-- Code Editor -->
+                        <div style="flex: 1; display: flex; flex-direction: column; background: #1e1e1e;">
+                            <!-- Tabs -->
+                            <div style="display: flex; background: #252526; border-bottom: 1px solid #1e1e1e;">
+                                <div style="padding: 8px 16px; background: #1e1e1e; border-top: 2px solid #ff3e00; font-size: 13px; display: flex; align-items: center; gap: 8px;">
+                                    <span style="color: #ff3e00;">◆</span> +page.svelte
+                                    <span style="opacity: 0.5; font-size: 16px; cursor: pointer;">×</span>
+                                </div>
+                            </div>
+                            <!-- Code Content -->
+                            <div style="flex: 1; padding: 12px; font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; line-height: 1.6; overflow: auto;">
+                                <div><span style="color: #808080;">&lt;</span><span style="color: #569cd6;">script</span> <span style="color: #9cdcfe;">lang</span>=<span style="color: #ce9178;">"ts"</span><span style="color: #808080;">&gt;</span></div>
+                                <div style="padding-left: 24px;"><span style="color: #c586c0;">import</span> { <span style="color: #9cdcfe;">onMount</span> } <span style="color: #c586c0;">from</span> <span style="color: #ce9178;">'svelte'</span>;</div>
+                                <div style="padding-left: 24px;"><span style="color: #c586c0;">import</span> <span style="color: #4ec9b0;">Counter</span> <span style="color: #c586c0;">from</span> <span style="color: #ce9178;">'$lib/Counter.svelte'</span>;</div>
+                                <div style="padding-left: 24px;"></div>
+                                <div style="padding-left: 24px;"><span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">count</span> = <span style="color: #dcdcaa;">$state</span>(<span style="color: #b5cea8;">0</span>);</div>
+                                <div style="padding-left: 24px;"><span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">message</span> = <span style="color: #dcdcaa;">$state</span>(<span style="color: #ce9178;">'Hello Svelte!'</span>);</div>
+                                <div style="padding-left: 24px;"></div>
+                                <div style="padding-left: 24px;"><span style="color: #dcdcaa;">onMount</span>(() <span style="color: #569cd6;">=&gt;</span> {</div>
+                                <div style="padding-left: 48px;"><span style="color: #9cdcfe;">console</span>.<span style="color: #dcdcaa;">log</span>(<span style="color: #ce9178;">'Component mounted!'</span>);</div>
+                                <div style="padding-left: 24px;">});</div>
+                                <div><span style="color: #808080;">&lt;/</span><span style="color: #569cd6;">script</span><span style="color: #808080;">&gt;</span></div>
+                                <div></div>
+                                <div><span style="color: #808080;">&lt;</span><span style="color: #569cd6;">main</span><span style="color: #808080;">&gt;</span></div>
+                                <div style="padding-left: 24px;"><span style="color: #808080;">&lt;</span><span style="color: #4ec9b0;">Counter</span> <span style="color: #9cdcfe;">bind:count</span> <span style="color: #808080;">/&gt;</span></div>
+                                <div style="padding-left: 24px;"><span style="color: #808080;">&lt;</span><span style="color: #569cd6;">p</span><span style="color: #808080;">&gt;</span>{<span style="color: #9cdcfe;">message</span>}<span style="color: #808080;">&lt;/</span><span style="color: #569cd6;">p</span><span style="color: #808080;">&gt;</span></div>
+                                <div><span style="color: #808080;">&lt;/</span><span style="color: #569cd6;">main</span><span style="color: #808080;">&gt;</span></div>
+                            </div>
+                            <!-- Status Bar -->
+                            <div style="background: #ff3e00; padding: 2px 12px; font-size: 12px; display: flex; justify-content: space-between;">
+                                <div style="display: flex; gap: 16px;">
+                                    <span>⎇ main</span>
+                                    <span>✓ 0</span>
+                                    <span>⚠ 0</span>
+                                </div>
+                                <div style="display: flex; gap: 16px;">
+                                    <span>Ln 1, Col 1</span>
+                                    <span>Spaces: 2</span>
+                                    <span>UTF-8</span>
+                                    <span>Svelte</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GitHub Desktop Window -->
+            <div class="window" id="github-window">
+                <div class="window-header" style="background: #24292e;">
+                    <span class="window-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" style="margin-right: 8px;">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                        GitHub Desktop
+                    </span>
+                    <div class="window-controls">
+                        <button class="win-btn" onclick="minimizeGitHub()">−</button>
+                        <button class="win-btn">□</button>
+                        <button class="win-btn close" onclick="closeGitHub()">×</button>
+                    </div>
+                </div>
+                <div class="window-content" style="padding: 0; display: flex; flex-direction: column; background: #fff;">
+                    <!-- GitHub Toolbar -->
+                    <div style="background: #f6f8fa; padding: 12px 16px; border-bottom: 1px solid #d0d7de; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <select style="padding: 6px 32px 6px 12px; border: 1px solid #d0d7de; border-radius: 6px; background: #fff; font-size: 14px; cursor: pointer;">
+                                <option>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 6px;">
+                                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                    portfolio-3d
+                                </option>
+                            </select>
+                            <button style="padding: 6px 12px; background: #2ea44f; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer;">Fetch origin</button>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button style="padding: 6px 12px; background: #fff; border: 1px solid #d0d7de; border-radius: 6px; font-size: 13px; cursor: pointer;">Push origin</button>
+                        </div>
+                    </div>
+                    
+                    <!-- GitHub Main Content -->
+                    <div style="display: flex; flex: 1; overflow: hidden;">
+                        <!-- Left Sidebar -->
+                        <div style="width: 200px; background: #f6f8fa; border-right: 1px solid #d0d7de; padding: 12px 0;">
+                            <div style="padding: 8px 16px; font-weight: 600; color: #24292e; background: #fff; margin: 0 8px; border-radius: 6px; border: 1px solid #d0d7de; display: flex; align-items: center; gap: 8px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                                Changes
+                            </div>
+                            <div style="padding: 8px 16px; margin-top: 4px; color: #57606a; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                History
+                            </div>
+                            <div style="padding: 8px 16px; color: #57606a; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="6" y1="3" x2="6" y2="15"/>
+                                    <circle cx="18" cy="6" r="3"/>
+                                    <circle cx="6" cy="18" r="3"/>
+                                    <path d="M18 9a9 9 0 0 1-9 9"/>
+                                </svg>
+                                Branches
+                            </div>
+                        </div>
+                        
+                        <!-- Changes View -->
+                        <div style="flex: 1; padding: 20px; background: #fff; overflow: auto;">
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #24292e;">Recent Changes</h3>
+                                <div style="font-size: 14px; color: #57606a;">3 changed files</div>
+                            </div>
+                            
+                            <!-- Changed Files List -->
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div style="padding: 12px; background: #f6f8fa; border-radius: 6px; display: flex; align-items: center; gap: 12px; border: 1px solid #d0d7de;">
+                                    <span style="color: #2ea44f; font-weight: 600;">M</span>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 500; color: #24292e; font-size: 13px;">src/lib/Experience/Camera.ts</div>
+                                        <div style="font-size: 12px; color: #57606a; margin-top: 2px;">Updated camera position</div>
+                                    </div>
+                                    <span style="color: #57606a; font-size: 12px;">+12 -4</span>
+                                </div>
+                                
+                                <div style="padding: 12px; background: #f6f8fa; border-radius: 6px; display: flex; align-items: center; gap: 12px; border: 1px solid #d0d7de;">
+                                    <span style="color: #2ea44f; font-weight: 600;">M</span>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 500; color: #24292e; font-size: 13px;">src/routes/+page.svelte</div>
+                                        <div style="font-size: 12px; color: #57606a; margin-top: 2px;">Added loading screen</div>
+                                    </div>
+                                    <span style="color: #57606a; font-size: 12px;">+45 -8</span>
+                                </div>
+                                
+                                <div style="padding: 12px; background: #f6f8fa; border-radius: 6px; display: flex; align-items: center; gap: 12px; border: 1px solid #d0d7de;">
+                                    <span style="color: #d29922; font-weight: 600;">A</span>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 500; color: #24292e; font-size: 13px;">static/fedora.html</div>
+                                        <div style="font-size: 12px; color: #57606a; margin-top: 2px;">Added desktop environment</div>
+                                    </div>
+                                    <span style="color: #57606a; font-size: 12px;">+1247</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Commit Box -->
+                            <div style="margin-top: 24px; padding: 16px; border: 1px solid #d0d7de; border-radius: 6px; background: #f6f8fa;">
+                                <input type="text" placeholder="Summary (required)" style="width: 100%; padding: 8px 12px; border: 1px solid #d0d7de; border-radius: 6px; font-size: 14px; margin-bottom: 8px; box-sizing: border-box;">
+                                <textarea placeholder="Description" style="width: 100%; padding: 8px 12px; border: 1px solid #d0d7de; border-radius: 6px; font-size: 13px; min-height: 60px; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
+                                <button style="margin-top: 12px; padding: 8px 16px; background: #2ea44f; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; width: 100%;">Commit to main</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Credits Window -->
+            <div class="window" id="credits-window">
+                <div class="window-header" style="background: rgba(30, 30, 30, 0.95);">
+                    <span class="window-title">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right: 8px;">
+                            <path d="M8 1L1 4.5V11.5L8 15L15 11.5V4.5L8 1Z" stroke="#f5c211" stroke-width="1.2" fill="none"/>
+                            <path d="M8 1V15M1 4.5L15 11.5M15 4.5L1 11.5" stroke="#f5c211" stroke-width="1.2"/>
+                        </svg>
+                        Credits
+                    </span>
+                    <div class="window-controls">
+                        <button class="win-btn" onclick="minimizeCredits()">−</button>
+                        <button class="win-btn">□</button>
+                        <button class="win-btn close" onclick="closeCredits()">×</button>
+                    </div>
+                </div>
+                <div class="window-content" style="padding: 32px 48px; background: #1e1e1e; font-family: 'Cantarell', 'Segoe UI', sans-serif; font-size: 14px; color: #d4d4d4; overflow-y: auto;">
+                    
+                    <!-- Engineering Section -->
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <h2 style="margin: 0 0 24px 0; font-size: 18px; font-weight: 500; color: #fff; letter-spacing: 3px; text-transform: uppercase;">Engineering</h2>
+                        <div style="display: flex; justify-content: center; align-items: center; gap: 48px;">
+                            <span style="color: rgba(255,255,255,0.6); font-size: 14px;">Design and programming</span>
+                            <span style="color: #e8a87c; font-size: 14px;">Joan Ramos Refusta</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Modeling & Texturing Section -->
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <h2 style="margin: 0 0 24px 0; font-size: 18px; font-weight: 500; color: #fff; letter-spacing: 3px; text-transform: uppercase;">Modeling & Texturing</h2>
+                        <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 48px;">
+                                <span style="color: rgba(255,255,255,0.6); font-size: 14px; min-width: 240px; text-align: right;">Texturing, Lighting & Composition</span>
+                                <span style="color: #e8a87c; font-size: 14px; min-width: 240px; text-align: left;">Joan Ramos Refusta</span>
+                            </div>
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 48px;">
+                                <span style="color: rgba(255,255,255,0.6); font-size: 14px; min-width: 240px; text-align: right;">Modeling</span>
+                                <span style="color: #e8a87c; font-size: 14px; min-width: 240px; text-align: left;">Joan Ramos Refusta & External Resources</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Frameworks Section -->
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <h2 style="margin: 0 0 24px 0; font-size: 18px; font-weight: 500; color: #fff; letter-spacing: 3px; text-transform: uppercase;">Frameworks & Libraries</h2>
+                        <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 48px;">
+                                <span style="color: rgba(255,255,255,0.6); font-size: 14px; min-width: 240px; text-align: right;">3D Engine</span>
+                                <span style="color: #85c1e9; font-size: 14px; min-width: 240px; text-align: left;">Three.js</span>
+                            </div>
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 48px;">
+                                <span style="color: rgba(255,255,255,0.6); font-size: 14px; min-width: 240px; text-align: right;">Web Framework</span>
+                                <span style="color: #85c1e9; font-size: 14px; min-width: 240px; text-align: left;">SvelteKit</span>
+                            </div>
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 48px;">
+                                <span style="color: rgba(255,255,255,0.6); font-size: 14px; min-width: 240px; text-align: right;">Animation</span>
+                                <span style="color: #85c1e9; font-size: 14px; min-width: 240px; text-align: left;">GSAP</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Inspiration Section -->
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <h2 style="margin: 0 0 24px 0; font-size: 18px; font-weight: 500; color: #fff; letter-spacing: 3px; text-transform: uppercase;">Inspiration</h2>
+                        <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 48px;">
+                                <span style="color: rgba(255,255,255,0.6); font-size: 14px; min-width: 240px; text-align: right;">Three.js Journey Course</span>
+                                <span style="color: #e8a87c; font-size: 14px; min-width: 240px; text-align: left;">Bruno Simon</span>
+                            </div>
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 48px;">
+                                <span style="color: rgba(255,255,255,0.6); font-size: 14px; min-width: 240px; text-align: right;">YouTube Tutorials</span>
+                                <span style="color: #e8a87c; font-size: 14px; min-width: 240px; text-align: left;">SimonDev</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Resources Section -->
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <h2 style="margin: 0 0 24px 0; font-size: 18px; font-weight: 500; color: #fff; letter-spacing: 3px; text-transform: uppercase;">Resources</h2>
+                        <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 48px;">
+                                <span style="color: rgba(255,255,255,0.6); font-size: 14px; min-width: 240px; text-align: right;">3D Models</span>
+                                <span style="color: #85c1e9; font-size: 14px; min-width: 240px; text-align: left;">Sketchfab & Poly Pizza</span>
+                            </div>
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 48px;">
+                                <span style="color: rgba(255,255,255,0.6); font-size: 14px; min-width: 240px; text-align: right;">Sound Effects</span>
+                                <span style="color: #85c1e9; font-size: 14px; min-width: 240px; text-align: left;">Freesound.org</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Special Thanks Section -->
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <h2 style="margin: 0 0 24px 0; font-size: 18px; font-weight: 500; color: #fff; letter-spacing: 3px; text-transform: uppercase;">Special Thanks</h2>
+                        <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 48px;">
+                                <span style="color: rgba(255,255,255,0.6); font-size: 14px; min-width: 240px; text-align: right;">Lofi Music</span>
+                                <span style="color: #e8a87c; font-size: 14px; min-width: 240px; text-align: left;">Lofi Girl</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div style="text-align: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
+    <p style="color: rgba(255,255,255,0.4); margin: 0; font-size: 13px;">
+        © <span id="year"></span> Reyhan Al Farel
+    </p>
+</div>
+                </div>
+            </div>
+        </div>s
+
+        <!-- Dock -->
+        <div class="dock">
+            <button class="dock-icon" title="Show Applications">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor"/>
+                    <rect x="13" y="3" width="7" height="7" rx="1.5" fill="currentColor"/>
+                    <rect x="3" y="13" width="7" height="7" rx="1.5" fill="currentColor"/>
+                    <rect x="13" y="13" width="7" height="7" rx="1.5" fill="currentColor"/>
+                </svg>
+            </button>
+            <div class="dock-separator"></div>
+            <button class="dock-icon has-window" onclick="openFiles()" title="Files">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2H4z" fill="currentColor"/>
+                </svg>
+            </button>
+            <button class="dock-icon" onclick="openResume()" title="Resume">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="currentColor"/>
+                </svg>
+            </button>
+            <button class="dock-icon" onclick="openTerminal()" title="Terminal">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="4" width="20" height="16" rx="2" fill="currentColor" opacity="0.9"/>
+                    <path d="M6 8l4 4-4 4M11 15h6" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" fill="none"/>
+                </svg>
+            </button>
+            <button class="dock-icon" onclick="openVSCode()" title="Visual Studio Code">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.583 2L6.25 11.737l-3.75-2.925L1 9.676v4.648l1.5.864 3.75-2.925L17.583 22 23 19.257V4.743L17.583 2z" fill="#007ACC"/>
+                    <path d="M17.583 2L6.25 11.737l-3.75-2.925L1 9.676v4.648l1.5.864 3.75-2.925L17.583 22v-20z" fill="#1F9CF0"/>
+                </svg>
+            </button>
+            <button class="dock-icon" onclick="openGitHub()" title="GitHub Desktop">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" fill="currentColor"/>
+                </svg>
+            </button>
+            <button class="dock-icon" onclick="openCredits()" title="Credits">
+                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 1.5l1.854 3.756 4.146.602-3 2.924.708 4.127L8 10.902l-3.708 1.951.708-4.127-3-2.924 4.146-.602L8 1.5z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <button class="dock-icon" onclick="openSettings()" title="Settings">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" fill="currentColor"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- External JavaScript Modules -->
+    <script src="js/window-manager.js"></script>
+    <script src="js/dock.js"></script>
+    <script src="js/terminal.js"></script>
+    <script src="js/applications.js"></script>
+    <script src="js/init.js"></script>
+</body>
