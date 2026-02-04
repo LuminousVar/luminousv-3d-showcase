@@ -280,21 +280,31 @@ Website : luminousv.my.id
    Interactive 3D portfolio built with Three.js
    Tech: SvelteKit, Three.js, GLSL, TypeScript
 
-<strong>2. E-Commerce Platform</strong>
-   Full-stack online shopping platform
-   Tech: React, Node.js, MongoDB, Stripe
+<strong>2. ArtiSign Real-Time Bisindo Translate</strong>
+   Real-time Bisindo Translate with 3D
+   Tech: React, FastAPI, Google Colab, TensorFlow / Keras, OpenCV
 
-<strong>3. Real-time Chat App</strong>
-   WebSocket-based messaging application
-   Tech: Vue.js, Socket.io, Express, Redis
+<strong>3. Basic Clothes Shop </strong>
+   Web Clothes Shop and Payment Gateway
+   Tech: HTML, CSS, JS
 
-<strong>4. AI Image Generator</strong>
-   AI-powered image generation tool
-   Tech: Python, FastAPI, Stable Diffusion
+<strong>4. Management Electricity</strong>
+   A web application to help you easily manage and monitor your electricity usage.
+   Tech: SvelteKit, Elysia.js, Prisma, MySQL
 
 <strong>5. Task Management Dashboard</strong>
    Project tracking and team collaboration
    Tech: React, TypeScript, PostgreSQL
+</div>
+
+<strong>6. SSH Management</strong>
+   Project Management SSH / Telnet for Network
+   Tech: Python
+</div>
+
+<strong>7. Cisco RESTCONF & NETCONF</strong>
+   Cisco Automation with RESTCONF & NETCONF
+   Tech: Python, FastAPI
 </div>`;
     }
 };
